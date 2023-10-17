@@ -83,7 +83,6 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
           onPressed: () {
             final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
             optionsRouletteController.options.clear();
-            print('cantidad = ${optionsRouletteController.options.length}');
           },
         )
       ],
