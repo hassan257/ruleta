@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     
     return const MaterialApp(
       title: 'Material App',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: _Body(),
       ),
@@ -35,12 +36,62 @@ class _Body extends StatelessWidget {
     const double widthIndicator = 30;
     const double widthRoulette = 200;
     final OptionsRouletteController optionsRouletteController = Get.put(OptionsRouletteController());
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const _AddOptionButton(),
-        Obx(() => optionsRouletteController.options.isNotEmpty ? const RouletteWidget(widthRoulette: widthRoulette, widthIndicator: widthIndicator, heightIndicator: heightIndicator) : Container()),
-      ],
+    return SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const _AddOptionButton(),
+              Obx(() {
+                if(optionsRouletteController.options.isNotEmpty){
+                  List<Widget> options = [];
+                  for (var option in optionsRouletteController.options) {
+                    options.add(Row(children: [
+                    Container(color: option.color, height: 10, width: 10,),
+                    Text(option.text)
+                    ],));
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _Information(widthRoulette: widthRoulette, options: options),
+                      const RouletteWidget(widthRoulette: widthRoulette, widthIndicator: widthIndicator, heightIndicator: heightIndicator),
+                    ],
+                  );
+                }else{
+                  return Container();
+                }
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Information extends StatelessWidget {
+  const _Information({
+    Key? key,
+    required this.widthRoulette,
+    required this.options,
+  }) : super(key: key);
+
+  final double widthRoulette;
+  final List<Widget> options;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widthRoulette,
+      child: Wrap(
+        direction: Axis.horizontal,
+        children: options,
+        runAlignment: WrapAlignment.center,
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+      ),
     );
   }
 }
@@ -66,8 +117,10 @@ class _AddOptionButton extends StatelessWidget {
       final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
       optionsRouletteController.optionNameTextController.clear();
       Get.defaultDialog(
+        barrierDismissible: false,
         title: 'Add Option',
         content: TextField(
+          autofocus: true,
           controller: optionsRouletteController.optionNameTextController,
           decoration: const InputDecoration(
             label: Text('Option\'s Name'),

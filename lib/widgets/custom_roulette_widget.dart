@@ -49,43 +49,46 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
     const double heightRoulette = 200;
     double widthRoulette = widget.width ?? 200;
     
-    return Column(
-      children: [
-        Roulette(
-          animate: isSpinning,
-          spins: 10,
-          duration: const Duration(seconds: 3),
-          child: SizedBox(
-            height: heightRoulette,
-            width: widthRoulette,
-            child: Transform.rotate(
-              angle: rotationAngle,
-              child: CustomPaint(
-                painter: RoulettePainter(elements: widget.elements),
+    return GestureDetector(
+      onTap: _spinRoulette,
+      child: Column(
+        children: [
+          Roulette(
+            animate: isSpinning,
+            spins: 10,
+            duration: const Duration(seconds: 3),
+            child: SizedBox(
+              height: heightRoulette,
+              width: widthRoulette,
+              child: Transform.rotate(
+                angle: rotationAngle,
+                child: CustomPaint(
+                  painter: RoulettePainter(elements: widget.elements),
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 30,),
-        CustomButton(
-          text: 'Spin',
-          colorButton: Colors.blueAccent,
-          colorText: Colors.white,
-          onPressed: _spinRoulette,
-          icon: Icons.cyclone,
-        ),
-        const SizedBox(height: 10,),
-        CustomButton(
-          text: 'Reset',
-          colorButton: Colors.redAccent,
-          colorText: Colors.white,
-          icon: Icons.restore,
-          onPressed: () {
-            final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
-            optionsRouletteController.options.clear();
-          },
-        )
-      ],
+          const SizedBox(height: 30,),
+          CustomButton(
+            text: 'Spin',
+            colorButton: Colors.blueAccent,
+            colorText: Colors.white,
+            onPressed: _spinRoulette,
+            icon: Icons.cyclone,
+          ),
+          const SizedBox(height: 10,),
+          CustomButton(
+            text: 'Reset',
+            colorButton: Colors.redAccent,
+            colorText: Colors.white,
+            icon: Icons.restore,
+            onPressed: () {
+              final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+              optionsRouletteController.options.clear();
+            },
+          )
+        ],
+      ),
     );
   }
 }
@@ -112,20 +115,20 @@ class RoulettePainter extends CustomPainter {
       final paint = Paint()..color = optionsRouletteController.options[i].color;
       canvas.drawArc(Rect.fromCircle(center: Offset(centerX, centerY), radius: radius), startAngle, sectionAngle, true, paint);
 
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: optionsRouletteController.options[i].text,
-          style: const TextStyle(color: Colors.black, fontSize: 30),
-        ),
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
+      // final textPainter = TextPainter(
+      //   text: TextSpan(
+      //     text: optionsRouletteController.options[i].text,
+      //     style: const TextStyle(color: Colors.black, fontSize: 30),
+      //   ),
+      //   textAlign: TextAlign.center,
+      //   textDirection: TextDirection.ltr,
+      // );
+      // textPainter.layout();
 
-      final textAngle = startAngle + sectionAngle / 2;
-      final textX = centerX + radius * cos(textAngle) - textPainter.width / 2;
-      final textY = centerY + radius * sin(textAngle) - textPainter.height / 2;
-      textPainter.paint(canvas, Offset(textX, textY));
+      // final textAngle = startAngle + sectionAngle / 2;
+      // final textX = centerX + radius * cos(textAngle) - textPainter.width / 2;
+      // final textY = centerY + radius * sin(textAngle) - textPainter.height / 2;
+      // textPainter.paint(canvas, Offset(textX, textY));
 
       startAngle += sectionAngle;
     }

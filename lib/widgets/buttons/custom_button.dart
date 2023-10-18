@@ -11,10 +11,10 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: onPressed, 
+    return GestureDetector(
+      onTap: onPressed, 
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           shape: BoxShape.rectangle,
@@ -23,6 +23,7 @@ class CustomButton extends StatelessWidget {
         child: Wrap(
           direction: Axis.horizontal,
           spacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Icon(icon, color: colorText,),
             Text(text,
