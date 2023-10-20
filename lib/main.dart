@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return const MaterialApp(
-      title: 'Material App',
+      title: 'Roulette',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: _Body(),
