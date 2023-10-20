@@ -20,9 +20,6 @@ class RouletteWidget extends StatelessWidget {
           children: [
             CustomRoulette(
               width: widthRoulette,
-              elements: [
-                RouletteElementModel(text: 'text', color: Colors.red)
-              ],
             ),
             Positioned(
               child: Transform.rotate(

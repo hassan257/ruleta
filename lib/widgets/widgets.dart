@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'dart:math';
 
 import '../controllers/controllers.dart';
-import '../models/models.dart';
 
 part 'custom_roulette_widget.dart';
 part 'buttons/custom_button.dart';

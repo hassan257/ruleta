@@ -4,21 +4,19 @@ part of 'widgets.dart';
 // ignore: must_be_immutable
 class CustomRoulette extends StatefulWidget {
   double? width;
-  final List<RouletteElementModel> elements;
-  CustomRoulette({Key? key, this.width, required this.elements}) : super(key: key);
+  CustomRoulette({Key? key, this.width}) : super(key: key);
 
   @override
   State<CustomRoulette> createState() => _CustomRouletteState();
 }
 
 class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProviderStateMixin{
-  bool isSpinning = false;
   
+  bool isSpinning = false;
+  double rotationAngle = 0;
 
   // ignore: unused_field
   late AnimationController _animationController;
-  double rotationAngle = 0;
-
   @override
   void initState() {
     _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
@@ -29,7 +27,6 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
     if (!isSpinning) {
       setState(() {
         isSpinning = true;
-        // currentPosition = Random().nextInt(5); // Genera un número aleatorio entre 0 y 4
       });
 
       // Simula una espera para la animación
@@ -51,6 +48,8 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
     
     return GestureDetector(
       onTap: _spinRoulette,
+      onVerticalDragEnd: (_) => _spinRoulette(),
+      onHorizontalDragEnd: (_) => _spinRoulette(),
       child: Column(
         children: [
           Roulette(
@@ -63,30 +62,11 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
               child: Transform.rotate(
                 angle: rotationAngle,
                 child: CustomPaint(
-                  painter: RoulettePainter(elements: widget.elements),
+                  painter: RoulettePainter(),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 30,),
-          CustomButton(
-            text: 'Spin',
-            colorButton: Colors.blueAccent,
-            colorText: Colors.white,
-            onPressed: _spinRoulette,
-            icon: Icons.cyclone,
-          ),
-          const SizedBox(height: 10,),
-          CustomButton(
-            text: 'Reset',
-            colorButton: Colors.redAccent,
-            colorText: Colors.white,
-            icon: Icons.restore,
-            onPressed: () {
-              final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
-              optionsRouletteController.options.clear();
-            },
-          )
         ],
       ),
     );
@@ -94,8 +74,6 @@ class _CustomRouletteState extends State<CustomRoulette>  with SingleTickerProvi
 }
 
 class RoulettePainter extends CustomPainter {
-  final List<RouletteElementModel> elements;
-  RoulettePainter({required this.elements});
   @override
   void paint(Canvas canvas, Size size) {
     final centerX = size.width / 2;
@@ -104,8 +82,6 @@ class RoulettePainter extends CustomPainter {
 
     final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
 
-    // final colors = [Colors.red, Colors.blue, Colors.green, Colors.yellow, Colors.orange];
-    // final texts = ['1', '2', '3', '4', '5'];
 
     final sectionAngle = 2 * pi / optionsRouletteController.options.length;
 
@@ -114,21 +90,6 @@ class RoulettePainter extends CustomPainter {
     for (int i = 0; i < optionsRouletteController.options.length; i++) {
       final paint = Paint()..color = optionsRouletteController.options[i].color;
       canvas.drawArc(Rect.fromCircle(center: Offset(centerX, centerY), radius: radius), startAngle, sectionAngle, true, paint);
-
-      // final textPainter = TextPainter(
-      //   text: TextSpan(
-      //     text: optionsRouletteController.options[i].text,
-      //     style: const TextStyle(color: Colors.black, fontSize: 30),
-      //   ),
-      //   textAlign: TextAlign.center,
-      //   textDirection: TextDirection.ltr,
-      // );
-      // textPainter.layout();
-
-      // final textAngle = startAngle + sectionAngle / 2;
-      // final textX = centerX + radius * cos(textAngle) - textPainter.width / 2;
-      // final textY = centerY + radius * sin(textAngle) - textPainter.height / 2;
-      // textPainter.paint(canvas, Offset(textX, textY));
 
       startAngle += sectionAngle;
     }
