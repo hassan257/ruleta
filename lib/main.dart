@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roulette/controllers/controllers.dart';
-import 'package:roulette/models/models.dart';
+import 'package:roulette_widget/roulette_widget.dart';
 
 import 'widgets/widgets.dart';
 
@@ -45,8 +45,10 @@ class _Body extends StatelessWidget {
             return const _MainMenu();
           }else{
             List<Widget> options = [];
+            List<RouletteElementModel> optionsRoulette = [];
             for (var option in optionsRouletteController.options) {
               options.add(_OptionElement(option: option));
+              optionsRoulette.add(RouletteElementModel(text: option.text, color: option.color));
             }
             return Column(
               children: [
@@ -61,7 +63,7 @@ class _Body extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _Information(widthRoulette: widthRoulette, options: options),
-                          const RouletteWidget(widthRoulette: widthRoulette, widthIndicator: widthIndicator, heightIndicator: heightIndicator),
+                          RouletteWidget(widthRoulette: widthRoulette, widthIndicator: widthIndicator, heightIndicator: heightIndicator, options: optionsRoulette,),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

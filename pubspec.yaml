@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
   get: ^4.6.6
   random_color: ^1.0.5
+  roulette_widget: ^1.0.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0
