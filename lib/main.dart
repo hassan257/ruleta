@@ -22,7 +22,10 @@ Future<void> main() async {
   // Para inhabilitar el cambio de orientación
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(const GetMaterialApp(home: MyApp()));
+  runApp(const GetMaterialApp(
+    home: MyApp(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
 class MyApp extends StatelessWidget {

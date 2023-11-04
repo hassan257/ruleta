@@ -1,4 +1,4 @@
-package com.example.ruleta
+package com.hassansystems.ruleta
 
 import io.flutter.embedding.android.FlutterActivity
 
