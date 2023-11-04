@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,16 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:roulette/controllers/controllers.dart';
-import 'package:roulette/widgets/ad/banner_widget.dart';
-import 'package:roulette/widgets/ad/interstitial_widget.dart';
 import 'package:roulette_widget/roulette_widget.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'widgets/ad/banner_widget.dart';
 import 'helpers/ad_helper.dart';
 import 'widgets/widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(Platform.isAndroid){
+  if (Platform.isAndroid) {
     // Inicializar publicidad
     await MobileAds.instance.initialize();
   }
@@ -31,13 +30,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return const MaterialApp(
       title: 'Roulette',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: _Body(),
       ),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'),
+        Locale('es'),
+      ],
     );
   }
 }
@@ -47,30 +55,32 @@ class _Body extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     const double heightIndicator = 30;
     const double widthIndicator = 30;
     const double widthRoulette = 200;
-    final OptionsRouletteController optionsRouletteController = Get.put(OptionsRouletteController());
+    final OptionsRouletteController optionsRouletteController =
+        Get.put(OptionsRouletteController());
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Obx(() {
-          if(optionsRouletteController.options.isEmpty){
+          if (optionsRouletteController.options.isEmpty) {
             return Column(
               children: [
                 const Expanded(child: _MainMenu()),
                 Platform.isAndroid ? const BannerWidget() : Container()
               ],
             );
-          }else{
+          } else {
             List<Widget> options = [];
             List<RouletteElementModel> optionsRoulette = [];
             for (var option in optionsRouletteController.options) {
               options.add(_OptionElement(option: option));
-              optionsRoulette.add(RouletteElementModel(text: option.text, color: option.color));
+              optionsRoulette.add(
+                  RouletteElementModel(text: option.text, color: option.color));
             }
             return Column(
               children: [
@@ -84,13 +94,26 @@ class _Body extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _Information(widthRoulette: widthRoulette, options: options),
-                          _Ruleta(widthRoulette: widthRoulette, widthIndicator: widthIndicator, heightIndicator: heightIndicator, optionsRoulette: optionsRoulette),
-                          const Row(
+                          _Information(
+                              widthRoulette: widthRoulette, options: options),
+                          _Ruleta(
+                              widthRoulette: widthRoulette,
+                              widthIndicator: widthIndicator,
+                              heightIndicator: heightIndicator,
+                              optionsRoulette: optionsRoulette),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.info, color: Colors.blueAccent,),
-                              Text('Tap or Drag to Spin', style: TextStyle(fontWeight: FontWeight.w500, color: Colors.blueAccent),),
+                              const Icon(
+                                Icons.info,
+                                color: Colors.blueAccent,
+                              ),
+                              Text(
+                                appLocalizations!.tapOrDragToSpin,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blueAccent),
+                              ),
                             ],
                           )
                         ],
@@ -103,9 +126,9 @@ class _Body extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                    children: [
                       CustomButton(
-                        text: 'Reset',
+                        text: appLocalizations.reset,
                         colorButton: Colors.redAccent,
                         colorText: Colors.white,
                         icon: Icons.restore,
@@ -147,16 +170,18 @@ class _Ruleta extends StatefulWidget {
 class _RuletaState extends State<_Ruleta> {
   int times = 0;
   InterstitialAd? interstitialAd;
-  _event(){
-    if(times == 5){
+  _event() {
+    if (times > 4) {
       setState(() {
         times = 0;
-        _loadAd();
+        // _loadAd();
+        interstitialAd!.show();
+      });
+    } else {
+      setState(() {
+        times++;
       });
     }
-    setState(() {
-      times++;
-    });
   }
 
   void _loadAd() {
@@ -192,14 +217,21 @@ class _RuletaState extends State<_Ruleta> {
           },
         ));
   }
+
   @override
   Widget build(BuildContext context) {
+    _loadAd();
     return GestureDetector(
-      onTap: _event,
-      child: RouletteWidget(widthRoulette: widget.widthRoulette, widthIndicator: widget.widthIndicator, heightIndicator: widget.heightIndicator, options: widget.optionsRoulette,));
+        onTap: _event,
+        child: RouletteWidget(
+          widthRoulette: widget.widthRoulette,
+          widthIndicator: widget.widthIndicator,
+          heightIndicator: widget.heightIndicator,
+          options: widget.optionsRoulette,
+          otherActions: _event,
+        ));
   }
 }
-
 
 class _OptionElement extends StatelessWidget {
   const _OptionElement({
@@ -213,9 +245,18 @@ class _OptionElement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(color: option.color, height: 10, width: 10,),
-        const SizedBox(width: 5,),
-        Text(option.text, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),)
+        Container(
+          color: option.color,
+          height: 10,
+          width: 10,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          option.text,
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+        )
       ],
     );
   }
@@ -253,36 +294,44 @@ class _AddOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return Obx(() => CustomButton(
-      onPressed: _callDialog,
-      colorButton: Colors.blueAccent,
-      colorText: Colors.white,
-      text: optionsRouletteController.options.isNotEmpty ? 'Add Option' : 'New Roulette',
-      icon: Icons.add_circle,
-    ));
+          onPressed: () => _callDialog(context),
+          colorButton: Colors.blueAccent,
+          colorText: Colors.white,
+          text: optionsRouletteController.options.isNotEmpty
+              ? appLocalizations!.addOption
+              : appLocalizations!.newRoulette,
+          icon: Icons.add_circle,
+        ));
   }
 
-  void _callDialog() {
-      final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
-      optionsRouletteController.optionNameTextController.clear();
-      Get.defaultDialog(
-        barrierDismissible: false,
-        title: 'Add Option',
-        content: TextField(
-          autofocus: true,
-          controller: optionsRouletteController.optionNameTextController,
-          decoration: const InputDecoration(
-            label: Text('Option\'s Name'),
-          ),
+  void _callDialog(BuildContext context) {
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
+    optionsRouletteController.optionNameTextController.clear();
+    Get.defaultDialog(
+      barrierDismissible: false,
+      title: appLocalizations!.addOption,
+      content: TextField(
+        autofocus: true,
+        controller: optionsRouletteController.optionNameTextController,
+        decoration: InputDecoration(
+          label: Text(appLocalizations.optionsName),
         ),
-        onCancel: () => Get.back(),
-        onConfirm: () async{
-          await optionsRouletteController.store();
-          Get.back();
-        },
-      );
-    }
+      ),
+      textCancel: appLocalizations.cancel,
+      textConfirm: appLocalizations.ok,
+      onCancel: () => Get.back(),
+      onConfirm: () async {
+        await optionsRouletteController.store();
+        Get.back();
+      },
+    );
+  }
 }
 
 class _MainMenu extends StatelessWidget {
@@ -298,11 +347,17 @@ class _MainMenu extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _NewRouletteButton(),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             _YesNoRouletteButton(),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             _ThreeOptionsButton(),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             _FourOptionsButton()
           ],
         ),
@@ -318,12 +373,18 @@ class _NewRouletteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return CustomButton(
-      onPressed: optionsRouletteController.callDialog,
+      onPressed: () => optionsRouletteController.callDialog(
+          appLocalizations!.addOption,
+          appLocalizations.optionsName,
+          appLocalizations.cancel,
+          appLocalizations.ok),
       colorButton: Colors.blueAccent,
       colorText: Colors.white,
-      text: 'New Roulette',
+      text: appLocalizations!.newRoulette,
       icon: Icons.new_releases,
     );
   }
@@ -336,12 +397,14 @@ class _YesNoRouletteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return CustomButton(
-      onPressed: optionsRouletteController.yesNoRoulette,
+      onPressed: () => optionsRouletteController.yesNoRoulette(context),
       colorButton: Colors.greenAccent,
       colorText: Colors.black,
-      text: 'Yes/No Roulette',
+      text: appLocalizations!.yesNoRoulette,
       icon: Icons.radio_button_checked,
     );
   }
@@ -354,12 +417,14 @@ class _ThreeOptionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return CustomButton(
-      onPressed: optionsRouletteController.threeOptionsRoulette,
+      onPressed: () => optionsRouletteController.threeOptionsRoulette(context),
       colorButton: Colors.redAccent,
       colorText: Colors.white,
-      text: 'Three Options Roulette',
+      text: appLocalizations!.threeOptionsRoulette,
       icon: Icons.radio_button_checked,
     );
   }
@@ -372,12 +437,14 @@ class _FourOptionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OptionsRouletteController optionsRouletteController = Get.find<OptionsRouletteController>();
+    final OptionsRouletteController optionsRouletteController =
+        Get.find<OptionsRouletteController>();
+    final AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return CustomButton(
-      onPressed: optionsRouletteController.fourOptionsRoulette,
+      onPressed: () => optionsRouletteController.fourOptionsRoulette(context),
       colorButton: Colors.amberAccent,
       colorText: Colors.black,
-      text: 'Four Options Roulette',
+      text: appLocalizations!.fourOptionsRoulette,
       icon: Icons.radio_button_checked,
     );
   }

@@ -1,0 +1,15 @@
+{
+    "tapOrDragToSpin": "Toca o arrastra para girar",
+    "newRoulette": "Nueva Ruleta",
+    "yesNoRoulette": "Ruleta Si o No",
+    "threeOptionsRoulette": "Ruleta de 3 opciones",
+    "fourOptionsRoulette": "Ruleta de 4 opciones",
+    "addOption": "Agregar Opción",
+    "optionsName": "Nombre de la Opción",
+    "ok": "Confirmar",
+    "cancel": "Cancelar",
+    "reset": "Reiniciar",
+    "option": "Opción",
+    "yes": "Si",
+    "no": "No"
+}

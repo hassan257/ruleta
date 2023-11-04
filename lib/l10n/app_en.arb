@@ -1,0 +1,54 @@
+{
+    "tapOrDragToSpin": "Tap or drag to spin",
+    "@tapOrDragToSpin": {
+      "description": "Tap or drag to spin"
+    },
+    "newRoulette": "New Roulette",
+    "@newRoulette": {
+      "description": "New Roulette"
+    },
+    "yesNoRoulette": "Yes/No Roulette",
+    "@yesNoRoulette": {
+      "description": "Yes/No Roulette"
+    },
+    "threeOptionsRoulette": "Three Options Roulette",
+    "@threeOptionsRoulette": {
+      "description": "Three Options Roulette"
+    },
+    "fourOptionsRoulette": "Four Options Roulette",
+    "@fourOptionsRoulette": {
+      "description": "Four Options Roulette"
+    },
+    "addOption": "Add Option",
+    "@addOption": {
+      "description": "Add Option"
+    },
+    "optionsName": "Option's name",
+    "@optionsName": {
+      "description": "Option's name"
+    },
+    "ok": "Ok",
+    "@ok": {
+      "description": "Ok"
+    },
+    "cancel": "Cancel",
+    "@cancel": {
+      "description": "Cancel"
+    },
+    "reset": "Reset",
+    "@reset": {
+      "description": "Reset"
+    },
+    "option": "Option",
+    "@option": {
+      "description": "Option"
+    },
+    "yes": "Yes",
+    "@yes": {
+      "description": "Yes"
+    },
+    "no": "No",
+    "@no": {
+      "description": "No"
+    }
+}
