@@ -38,6 +38,7 @@ dependencies:
   google_mobile_ads: ^3.1.0
   random_color: ^1.0.5
   roulette_widget: ^1.2.0
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -46,7 +47,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  android: "launcher_icon" 
+  android: "launcher_icon"
   ios: true
   image_path: "assets/icon/logo.png"
   adaptive_icon_background: "assets/icon/logo.png"

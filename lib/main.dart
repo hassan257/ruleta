@@ -8,6 +8,7 @@ import 'package:roulette/controllers/controllers.dart';
 import 'package:roulette_widget/roulette_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/ad/banner_widget.dart';
 import 'helpers/ad_helper.dart';
@@ -33,22 +34,54 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Roulette',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: _Body(),
+        body: const _Body(),
+        appBar: AppBar(
+          backgroundColor: Colors.white10,
+          elevation: 0,
+          actions: const [_PrivacyButton()],
+        ),
       ),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en'),
         Locale('es'),
       ],
+    );
+  }
+}
+
+class _PrivacyButton extends StatelessWidget {
+  const _PrivacyButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: GestureDetector(
+        child: const Icon(
+          Icons.privacy_tip,
+          color: Colors.black26,
+        ),
+        onTap: () async {
+          const url =
+              'https://hassansystems.com/src/privacidad/privacidad_simple_decision_roulette.html';
+          final Uri _url = Uri.parse(url);
+          if (await canLaunchUrl(_url)) {
+            await launchUrl(_url, mode: LaunchMode.externalApplication);
+          }
+        },
+      ),
     );
   }
 }
